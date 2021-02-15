@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{customer.order.history}"></title>
+    <!--/*/ <th:block th:include="fragments/general.html :: headerfiles"> </th:block> /*/-->
+</head>
+<body>
+    <div class="container">
+    <header th:insert="fragments/general.html :: header (title = 'Order history')"> </header>
+    <th:block th:replace="fragments/navigation.html :: main-navigation"/>
+    <th:block th:replace="fragments/navigation.html :: account-subnavigation"/>
+
+    <h1 th:text="#{customer.order.history}"></h1>
+    <p>    </p>
+
+    <div th:if="${#lists.size(orders) > 0}">
+        <table border="1">
+            <thead>
+            <tr>
+                <th th:text="#{field.shipping.address}"  style="min-width: 100px"/>
+                <th th:text="#{field.payment.method}" style="min-width: 50px"/>
+                <th th:text="#{field.total.price}" />
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order, iStat : ${orders}" th:style="${iStat.odd}? 'font-weight: bold;'"
+                th:alt-title="${iStat.even}? 'even' : 'odd'">
+
+                <td th:text="${order.shippingAddressId}" />
+                <td th:text="${order.paymentMethodId}" />
+                <td th:text="${order.totalPrice}" />
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/general.html :: footer" />
+    </div>
+
+
+</body>
+</html>

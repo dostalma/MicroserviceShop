@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Details</title>
+    <!--/*/ <th:block th:include="fragments/general.html :: headerfiles"> </th:block> /*/-->
+</head>
+<body>
+    <div class="container">
+    <header th:insert="fragments/general.html :: header (title = 'Customer registration')"> </header>
+    <th:block th:replace="fragments/navigation.html :: main-navigation"/>
+
+    <p text="Register form"></p>
+
+    <form class="form-horizontal" action="#" th:action="@{/customer/register}" th:object="${customerDto}" method="post">
+
+        <h1 th:if="${success == 'true'}" >OK</h1>
+
+        <!--
+        <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+            <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+        </div>
+        -->
+
+        <div class="form-group row">
+            <label class="control-label col-sm-2" for="email" th:text="#{field.email}" />
+            <div class="col-sm-10">
+                <input type="text" th:field="*{email}" class="form-control" id="email"
+                       th:placeholder="#{field.email.placeholder}">
+                <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email error</span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-sm-2" for="confirmation-email" th:text="#{field.confirmation.email}" />
+            <div class="col-sm-10">
+                <input type="text" th:field="*{confirmationEmail}" class="form-control" id="confirmation-email"
+                       th:placeholder="#{field.confirmation.email.placeholder}">
+                <span class="text-danger" th:if="${#fields.hasErrors('confirmationEmail')}" th:errors="*{confirmationEmail}">confirmationEmail error</span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-sm-2" for="password" th:text="#{field.password}" />
+            <div class="col-sm-10">
+                <input type="text" th:field="*{password}" class="form-control" id="password"
+                       th:placeholder="#{field.password.placeholder}">
+                <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error</span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-sm-2" for="confirmation-password" th:text="#{field.confirmation.password}" />
+            <div class="col-sm-10">
+                <input type="text" th:field="*{confirmationPassword}" class="form-control" id="confirmation-password"
+                       th:placeholder="#{field.confirmation.password.placeholder}">
+                <span class="text-danger" th:if="${#fields.hasErrors('confirmationPassword')}" th:errors="*{confirmationPassword}">confirmationPassword error</span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-sm-2" for="fullname" th:text="#{field.fullname}" />
+            <div class="col-sm-10">
+                <input type="text" th:field="*{fullName}" class="form-control" id="fullname"
+                       th:placeholder="#{field.fullname.placeholder}">
+                <span class="text-danger" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">fullName error</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="phone">Phone:</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Enter phone">
+                <span class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">phone error</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label><input type="checkbox"> Remember me</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div th:replace="fragments/general.html :: footer" />
+    </div>
+
+
+</body>
+</html>

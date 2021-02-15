@@ -1,0 +1,181 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet author="mdostal" id="init-create-product">
+        <createTable tableName="PRODUCT">
+            <column name="PRODUCT_ID" type="INT" autoIncrement="true" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PRODUCT" />
+            </column>
+            <column name="NAME" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="UQ_PRODUCT_NAME"/>
+            </column>
+            <column name="PRICE" type="FLOAT(2)" />
+            <column name="CATALOG_IMAGE" type="VARCHAR(100)" />
+            <column name="DESCRIPTION" type="VARCHAR(250)" />
+        </createTable>
+    </changeSet>
+
+    <changeSet author="mdostal" id="init-create-customer">
+        <createTable tableName="CUSTOMER">
+            <column name="CUSTOMER_ID" type="INT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CUSTOMER" />
+            </column>
+            <column name="FULL_NAME" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="UQ_PRODUCT_EMAIL"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="PHONE" type="VARCHAR(9)" />
+            <column name="ENABLED" type="NUMBER(1)" defaultValue="1" />
+        </createTable>
+
+        <sql>
+            alter table CUSTOMER add constraint
+            CHK_CUSTOMER_PHONE_NUMERIC check ( REGEXP_LIKE(PHONE, '^[[:digit:]]{9}$') );
+
+            alter table CUSTOMER add constraint
+            CHK_CUSTOMER_EMAIL check ( REGEXP_LIKE(EMAIL, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') );
+        </sql>
+    </changeSet>
+
+    <changeSet author="mdostal" id="init-create-authority">
+        <createTable tableName="AUTHORITY">
+            <column name="EMAIL" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AUTHORITY" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>
+            alter table AUTHORITY add constraint
+            FK_AUTHORITY_EMAIL foreign key (EMAIL) references CUSTOMER(EMAIL);
+
+            create trigger CUSTOMER_AUTHORITY_INSERT_TRG
+            after insert on CUSTOMER
+            for each row
+            insert into authority (EMAIL, AUTHORITY)  values (NEW.email, 'CUSTOMER');
+
+            create trigger CUSTOMER_AUTHORITY_DELETE_TRG
+            after delete on CUSTOMER
+            for each row
+            delete from authority
+            where email = old.email;
+        </sql>
+    </changeSet>
+
+    <changeSet author="mdostal" id="init-create-address">
+        <createTable tableName="ADDRESS">
+            <column name="ADDRESS_ID" type="INT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ADDRESS" />
+            </column>
+            <column name="STREET" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="HOUSE_NUMBER" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="CITY" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ZIP_CODE" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="COUNTRY" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="CUSTOMER_ID" type="INT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <sql>
+            alter table ADDRESS add constraint
+            CHK_ADDRESS_HOUSE_NUMBER_NUMERIC check ( REGEXP_LIKE(HOUSE_NUMBER, '^[[:digit:]]+$') );
+
+            alter table ADDRESS add constraint
+            CHK_ADDRESS_ZIP_CODE_NUMERIC check ( REGEXP_LIKE(ZIP_CODE, '^[[:digit:]]{5}$') );
+
+            alter table ADDRESS add constraint
+            FK_ADDRESS_CUSTOMER_ID foreign key (CUSTOMER_ID) references CUSTOMER(CUSTOMER_ID);
+        </sql>
+
+        <rollback>
+            drop table ADDRESS;
+        </rollback>
+    </changeSet>
+
+    <changeSet author="mdostal" id="init-create-payment-methods">
+        <createTable tableName="PAYMENT_METHOD">
+            <column name="PAYMENT_METHOD_ID" type="INT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PAYMENT_METHOD" />
+            </column>
+            <column name="NAME" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="UQ_PAYMENT_METHOD_NAME"/>
+            </column>
+            <column name="ENABLED" type="NUMBER(1)" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="mdostal" id="init-create-orders">
+        <createTable tableName="ORDERS">
+            <column name="ORDERS_ID" type="INT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER" />
+            </column>
+            <column name="CUSTOMER_ID" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="SHIPPING_ADDRESS_ID" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="PAYMENT_METHOD_ID" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="TOTAL_PRICE" type="FLOAT(2)" />
+        </createTable>
+
+        <sql>
+            alter table ORDERS add constraint
+            FK_ORDERS_CUSTOMER_ID foreign key (CUSTOMER_ID) references CUSTOMER(CUSTOMER_ID);
+
+            alter table ORDERS add constraint
+            FK_ORDERS_SHIPPING_ADDRESS_ID foreign key (SHIPPING_ADDRESS_ID) references ADDRESS(ADDRESS_ID);
+
+            alter table ORDERS add constraint
+            FK_ORDERS_PAYMENT_METHOD_ID foreign key (PAYMENT_METHOD_ID) references PAYMENT_METHOD(PAYMENT_METHOD_ID);
+        </sql>
+    </changeSet>
+
+    <changeSet author="mdostal" id="init-create-product_orders">
+        <createTable tableName="PRODUCT_ORDERS">
+            <column name="PRODUCT_ID" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="ORDERS_ID" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="QUANTITY" type="INT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <sql>
+            alter table PRODUCT_ORDERS
+            add primary key (PRODUCT_ID, ORDERS_ID);
+
+            alter table PRODUCT_ORDERS add constraint
+            FK_PRODUCT_ORDERS_PRODUCT_ID foreign key (PRODUCT_ID) references PRODUCT(PRODUCT_ID);
+
+            alter table PRODUCT_ORDERS add constraint
+            FK_PRODUCT_ORDERS_ORDERS_ID foreign key (ORDERS_ID) references ORDERS(ORDERS_ID);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

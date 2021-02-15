@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{checkout.order.complete.title}">Basket</title>
+    <!--/*/ <th:block th:include="fragments/general.html :: headerfiles"> </th:block> /*/-->
+    <script type="text/javascript" th:src="@{/js/checkout.js}"></script>
+</head>
+<body>
+
+<div class="container">
+    <header th:insert="fragments/general.html :: header (title = #{checkout.order.complete.title})"> </header>
+    <th:block th:replace="fragments/navigation.html :: main-navigation"/>
+
+    <h1 th:text="#{checkout.order.complete.title}"/>
+
+
+    <div th:replace="fragments/general.html :: footer"></div>
+</div>
+</body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    let deleteBasketCookie = /*[[${deleteBasketCookieFlag}]]*/ 'default';
+    if ("true" === deleteBasketCookie) {
+        $.cookie("basket-content", "", { path: '/' });
+    }
+
+    /*]]>*/
+</script>
+</html>

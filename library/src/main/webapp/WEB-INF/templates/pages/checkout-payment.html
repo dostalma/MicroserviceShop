@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{payment.title}">Basket</title>
+    <!--/*/ <th:block th:include="fragments/general.html :: headerfiles"> </th:block> /*/-->
+    <script type="text/javascript" th:src="@{/js/checkout.js}"></script>
+</head>
+<body>
+
+<div class="container">
+    <header th:insert="fragments/general.html :: header (title = #{payment.title})"> </header>
+    <th:block th:replace="fragments/navigation.html :: main-navigation"/>
+
+    <h1 th:text="#{payment.title.heading}"/>
+
+    <form class="form-horizontal" action="#" th:object="${selectedPaymentMethod}" th:action="@{/checkout/submitPayment}" method="post">
+        <div th:each="paymentMethod : ${paymentMethods}" class="radio-toolbar" id="paymentMethodSelection">
+            <div>
+                <input type="radio" th:id="${'paymentMethod_' + paymentMethod.getId()}" name="method" th:disabled="${!paymentMethod.enabled}"
+                       th:value="${paymentMethod.getId()}" th:field="${selectedPaymentMethod.id}">
+                <label th:class="${paymentMethod.isEnabled() ?  'payment-method-btn' : ' payment-method-btn disabled' }"
+                       th:for="${'paymentMethod_' + paymentMethod.getId()}" th:text="${paymentMethod.getName()}">method</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" disabled="disabled" id="payment-proceed-btn" class="btn btn-default" th:text="#{payment.continue.btn}"></button>
+            </div>
+        </div>
+    </form>
+
+    <div th:replace="fragments/general.html :: footer"></div>
+</div>
+</body>
+</html>

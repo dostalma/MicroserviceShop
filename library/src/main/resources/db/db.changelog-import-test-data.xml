@@ -1,0 +1,54 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet author="mdostal" id="test-import-1" context="test">
+        <insert tableName="PRODUCT">
+            <column name="NAME" value="TestProduct1" />
+            <column name="PRICE" value="3.99" type="DECIMAL(3,2)"/>
+        </insert>
+
+        <insert tableName="PRODUCT">
+            <column name="NAME" value="TestProduct2" />
+            <column name="PRICE" value="4.99" type="DECIMAL(3,2)"/>
+        </insert>
+
+        <insert tableName="PRODUCT">
+            <column name="NAME" value="TestProduct3" />
+            <column name="PRICE" value="5.99" type="DECIMAL(3,2)"/>
+        </insert>
+
+        <insert tableName="PRODUCT">
+            <column name="NAME" value="TestProduct4" />
+            <column name="PRICE" value="6.99" type="DECIMAL(3,2)"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="mdostal" id="test-import-2" context="test">
+        <sql>
+            insert into CUSTOMER(FULL_NAME, EMAIL, PHONE)
+            values ('John Doe', 'user1@foo.com', '123456789');
+
+            insert into ADDRESS(STREET, HOUSE_NUMBER, CITY, ZIP_CODE, COUNTRY, CUSTOMER_ID)
+            values ('Noob Street', '1234', 'Nabville', '09876', 'Nabland', 1);
+
+            insert into ORDERS(CUSTOMER_ID, SHIPPING_ADDRESS_ID, PAYMENT_METHOD_ID, TOTAL_PRICE)
+            values (1, 1, 1, 22.95);
+
+            insert into PRODUCT_ORDERS(PRODUCT_ID, ORDERS_ID, QUANTITY)
+            values (1, 1, 2);
+
+            insert into PRODUCT_ORDERS(PRODUCT_ID, ORDERS_ID, QUANTITY)
+            values (2, 1, 3);
+
+            insert into ORDERS(CUSTOMER_ID, SHIPPING_ADDRESS_ID, PAYMENT_METHOD_ID, TOTAL_PRICE)
+            values (1, 1, 1, 33.95);
+
+            insert into PRODUCT_ORDERS(PRODUCT_ID, ORDERS_ID, QUANTITY)
+            values (3, 2, 1);
+
+            insert into PRODUCT_ORDERS(PRODUCT_ID, ORDERS_ID, QUANTITY)
+            values (4, 2, 4);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

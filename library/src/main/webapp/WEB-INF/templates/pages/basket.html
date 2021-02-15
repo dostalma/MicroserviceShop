@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{basket.title}">Basket</title>
+    <!--/*/ <th:block th:include="fragments/general.html :: headerfiles"> </th:block> /*/-->
+    <script type="text/javascript" th:src="@{/js/products.js}"></script>
+</head>
+<body>
+
+<div class="container">
+    <header th:insert="fragments/general.html :: header (title = #{basket.title})"> </header>
+    <th:block th:replace="fragments/navigation.html :: main-navigation"/>
+
+    <h1 th:text="#{basket.title.heading}"/>
+    <div>
+        <form action="#" id="proceedToCheckoutBtn" th:action="@{/basket/proceedToCheckout}"  method="post">
+        <span>Continue to checkout: </span>
+        <button type="submit" class="btn btn-default" id="continue-to-basket-btn">
+            <img th:src="@{/files/trade.png}" class="currency-img" />
+        </button>
+        </form>
+    </div>
+
+    <p th:text="#{basket.page.text1}" />
+
+    <div th:if="${products.size() > 0}">
+    <table border="1">
+        <thead>
+        <tr>
+            <th th:text="#{column.id}"    style="min-width: 25px" />
+            <th th:text="#{column.name}"  style="min-width: 100px"/>
+            <th th:text="#{column.price}" style="min-width: 50px"/>
+            <th th:text="#{column.image}" />
+            <th th:text="#{column.action}" style="min-width: 50px" />
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product, iStat : ${products}" th:style="${iStat.odd}? 'font-weight: bold;'"
+            th:alt-title="${iStat.even}? 'even' : 'odd'">
+
+            <td th:text="${product.id}" />
+            <td>
+                <a th:href="@{${'/products/' + product.id}}" th:text="${product.name}" target="_self" />
+            </td>
+            <td th:text="${product.price}" />
+            <td>
+                <img th:if="${product.catalogImageLink != null && product.catalogImageLink != ''}"
+                     th:src="@{${'/files/' + product.catalogImageLink}}" class="product-catalog-img" />
+            </td>
+            <td>
+                <div class="basket-actions">
+                    <input type="number" class="quantity-counter" th:id="${'quantityFieldProduct_' + product.id}"
+                        onchange="adjustBasketContentCookie(this)"/>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+    <div th:unless="${products.size() > 0}">
+        <span>Basket is empty</span>
+    </div>
+
+    <div th:replace="fragments/general.html :: footer"></div>
+</div>
+</body>
+</html>

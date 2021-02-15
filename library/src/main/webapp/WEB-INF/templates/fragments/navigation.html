@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="main-navigation">
+    <div>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar" aria-hidden="true"></span>
+                        <span class="icon-bar" aria-hidden="true"></span>
+                        <span class="icon-bar" aria-hidden="true"></span>
+                    </button>
+                    <a class="navbar-brand" th:href="@{/}" th:text="#{app.name}" />
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li th:class="active">
+                            <a th:href="@{/products}" th:text="#{products.title}"/>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li th:class="active">
+                            <a th:href="@{/basket}">
+                                <span th:text="#{basket.title}" />
+                                <span id="basket-counter">.</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!--
+                    <ul class="nav navbar-nav">
+                        <li th:class="active">
+                            <a th:href="@{/customer/registration}" th:text="#{customer.register}"/>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li th:class="active">
+                            <a th:href="@{/customer/account}" th:text="#{customer.account}"/>
+                    </ul>
+                    -->
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="ui-toggle" class="hidden"></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li th:if="${#authorization.expression('!isAuthenticated()')}">
+                            <a th:href="@{/customer/account}">
+                                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in
+                            </a>
+                        </li>
+                        <li th:if="${#authorization.expression('isAuthenticated()')}">
+                            <a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
+                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+                            </a>
+                            <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li th:if="${#authorization.expression('isAuthenticated()')}">
+                            <a th:href="@{/customer/account}" th:text="#{customer.account}"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div th:fragment="account-subnavigation" class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li th:classappend="${module == 'home' ? 'active' : ''}">
+                    <a href="#" th:href="@{/customer/account}" th:text="#{customer.details}"></a>
+                </li>
+                <li th:classappend="${module == 'tasks' ? 'active' : ''}">
+                    <a href="#" th:href="@{/customer/account/orders}" th:text="#{customer.order.history}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

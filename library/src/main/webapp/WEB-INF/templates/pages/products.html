@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{products.title}" />
+    <!--/*/ <th:block th:include="fragments/general.html :: headerfiles"> </th:block> /*/-->
+
+</head>
+<body>
+
+<div class="container">
+    <header th:insert="fragments/general.html :: header (title = #{products.title})"> </header>
+    <th:block th:replace="fragments/navigation.html :: main-navigation"/>
+
+    <h1 th:text="#{products.list.heading}"/>
+    <p th:text="#{products.list.info}"/>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th th:text="#{column.id}"    style="min-width: 25px" />
+            <th th:text="#{column.name}"  style="min-width: 100px"/>
+            <th th:text="#{column.price}" style="min-width: 50px"/>
+            <th th:text="#{column.image}" />
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product, iStat : ${products}" th:style="${iStat.odd}? 'font-weight: bold;'"
+            th:alt-title="${iStat.even}? 'even' : 'odd'">
+
+            <td th:text="${product.id}" />
+            <td>
+                <a th:href="@{${'/products/' + product.id}}" th:text="${product.name}" target="_self" />
+            </td>
+            <td th:text="${product.price}" />
+            <td>
+                <img th:if="${product.catalogImageLink != null && product.catalogImageLink != ''}"
+                     th:src="@{${'/files/' + product.catalogImageLink}}" class="product-catalog-img" />
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="fragments/general.html :: footer"></div>
+</div>
+</body>
+</html>

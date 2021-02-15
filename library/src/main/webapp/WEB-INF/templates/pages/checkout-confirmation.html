@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{confirmation.title}">Basket</title>
+    <!--/*/ <th:block th:include="fragments/general.html :: headerfiles"> </th:block> /*/-->
+    <script type="text/javascript" th:src="@{/js/products.js}"></script>
+</head>
+<body>
+
+<div class="container">
+    <header th:insert="fragments/general.html :: header (title = #{confirmation.title})"> </header>
+    <th:block th:replace="fragments/navigation.html :: main-navigation"/>
+
+    <div th:if="${products.size() > 0}">
+        <h1 th:text="#{products.title}" />
+        <table border="1">
+            <thead>
+            <tr>
+                <th th:text="#{column.name}"  style="min-width: 100px"/>
+                <th th:text="#{column.price}" style="min-width: 50px"/>
+                <th th:text="#{column.image}" />
+                <th th:text="#{column.quantity}" style="min-width: 50px" />
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product, iStat : ${products}" th:style="${iStat.odd}? 'font-weight: bold;'"
+                th:alt-title="${iStat.even}? 'even' : 'odd'">
+
+                <td>
+                    <a th:href="@{${'/products/' + product.key.id}}" th:text="${product.key.name}" target="_self" />
+                </td>
+                <td th:text="${product.key.price}" />
+                <td>
+                    <img th:if="${product.key.catalogImageLink != null && product.key.catalogImageLink != ''}"
+                         th:src="@{${'/files/' + product.key.catalogImageLink}}" class="product-catalog-img" />
+                </td>
+                <!--<td th:id="${'quantityFieldProduct_' + product.key.id}" />-->
+                <td th:text="${product.value}" />
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h1 th:text="#{checkout.address}" />
+        <ul class="list-group" th:object="${customer}">
+            <li class="list-group-item">
+                <span th:text="#{field.fullname} + ' '" style="font-weight: bold;" />
+                <span th:text="*{fullName}" /></li>
+            <li class="list-group-item">
+                <span th:text="#{field.street} + ' '" style="font-weight: bold;" />
+                <span th:text="*{address.street}" /></li>
+            <li class="list-group-item">
+                <span th:text="#{field.housenumber} + ' '" style="font-weight: bold;" />
+                <span th:text="*{address.houseNumber}" /></li>
+            <li class="list-group-item">
+                <span th:text="#{field.city} + ' '" style="font-weight: bold;" />
+                <span th:text="*{address.city}" /></li>
+            <li class="list-group-item">
+                <span th:text="#{field.zipcode} + ' '" style="font-weight: bold;" />
+                <span th:text="*{address.zipCode}" /></li>
+            <li class="list-group-item">
+                <span th:text="#{field.country} + ' '" style="font-weight: bold;" />
+                <span th:text="*{address.country}" /></li>
+            <li class="list-group-item">
+                <span th:text="#{field.email} + ' '" style="font-weight: bold;" />
+                <span th:text="*{email}" /></li>
+            <li class="list-group-item">
+                <span th:text="#{field.phone} + ' '" style="font-weight: bold;" />
+                <span th:text="*{phone}" /></li>
+        </ul>
+    </div>
+
+    <div>
+        <h1 th:text="#{payment.title}" />
+        <span th:text="#{field.payment.method} + ' '" style="font-weight: bold;" />
+        <span th:text="*{paymentMethod.name}" /></li>
+    </div>
+
+    <form class="form-horizontal" action="#" th:action="@{/checkout/submitOrder}" method="post">
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="submit-order-btn" class="btn btn-default"
+                        th:text="#{button.submit.order}"></button>
+            </div>
+        </div>
+    </form>
+
+    <div th:replace="fragments/general.html :: footer"></div>
+</div>
+</body>
+</html>

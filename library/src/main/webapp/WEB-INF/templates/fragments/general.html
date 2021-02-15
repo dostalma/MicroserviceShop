@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headerfiles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- font awesome -->
+    <!--
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    -->
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" type="text/javascript"></script>
+
+    <!-- JS-Cookie -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
+    <!-- favicon error fix -->
+    <link rel="shortcut icon" href="#">
+
+    <link rel="stylesheet" th:href="@{/css/format.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+</head>
+<body>
+    <div th:fragment="header (title)">
+        <h1 th:text="${title}">Title text</h1>
+        <img th:src="@{/images/bazaar.jpg}" class="banner-img" />
+    </div>
+
+
+
+    <aside>
+        <div>This is a sidebar</div>
+    </aside>
+
+    <footer th:fragment="footer">
+        &copy; 2020 Footer
+    </footer>
+</body>
+</html>
